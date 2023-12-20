@@ -1,7 +1,9 @@
+import java.util.OptionalInt;
+
 public class Person {
     protected final String name;
     protected final String surname;
-    protected int age;
+    protected OptionalInt age;
     protected String address;
 
     public Person(String name, String surname) {
@@ -10,7 +12,7 @@ public class Person {
         }
         this.name = name;
         this.surname = surname;
-        this.age = -1;
+        this.age = OptionalInt.empty();
     }
 
     public Person(String name, String surname, int age) {
@@ -18,11 +20,11 @@ public class Person {
         if (age < 0) {
             throw new IllegalArgumentException("Возраст не может быть отрицательным");
         }
-        this.age = age;
+        this.age = OptionalInt.of(age);
     }
 
     public boolean hasAge() {
-        return age != -1;
+        return age.isPresent();
     }
 
     public boolean hasAddress() {
@@ -37,10 +39,7 @@ public class Person {
         return surname;
     }
 
-    public int getAge() {
-        if (!hasAge()) {
-            throw new IllegalStateException("Возраст неизвестен");
-        }
+    public OptionalInt getAge() {
         return age;
     }
 
@@ -54,7 +53,7 @@ public class Person {
 
     public void happyBirthday() {
         if (hasAge()) {
-            age++;
+            age = OptionalInt.of(age.getAsInt() + 1);
         }
     }
 
@@ -66,7 +65,7 @@ public class Person {
 
     @Override
     public String toString() {
-        return name + " " + surname + (hasAge() ? ", возраст: " + age : "") + (hasAddress() ? ", город: " + address : "");
+        return name + " " + surname + (hasAge() ? ", возраст: " + age.getAsInt() : "") + (hasAddress() ? ", город: " + address : "");
     }
 
     @Override
